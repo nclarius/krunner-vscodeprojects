@@ -21,6 +21,7 @@ void VSCodeProjectsRunner::reloadConfiguration() {
 
     appNameMatches = config().readEntry("appNameMatches", true);
     projectNameMatches = config().readEntry("projectNameMatches", true);
+    tagMatches = config().readEntry("tagMatches", true);
 }
 
 void VSCodeProjectsRunner::match(Plasma::RunnerContext &context) {
@@ -46,6 +47,22 @@ void VSCodeProjectsRunner::match(Plasma::RunnerContext &context) {
                     context.addMatch(
                             createMatch("Open " + project.name, project.path, (double) project.position / 20)
                     );
+                }
+            }
+        }
+    }
+    if (tagMatches) {
+        const auto match = nameQueryRegex.match(term);
+        if (!match.hasMatch()) return;
+        const QString projectQuery = match.captured(QStringLiteral("query"));
+        for (const auto &project: qAsConst(projects)) {
+            for (const auto &tag:project.tags) {
+                if (tag.startsWith(projectQuery, Qt::CaseInsensitive)) {
+                    if (QFileInfo::exists(project.path)) {
+                        context.addMatch(
+                                createMatch("Open " + project.name, project.path, (double) 0.8 * termlength() / tag.length())
+                        );
+                    }
                 }
             }
         }
@@ -95,7 +112,7 @@ QList<VSCodeProject> VSCodeProjectsRunner::loadProjects(const QString &dirName) 
                     --position;
                     const QString projectPath = obj.value(QStringLiteral("rootPath")).toString()
                                                     .replace(QLatin1String("$home"), QDir::homePath());
-                    projects.append(VSCodeProject{position, obj.value(QStringLiteral("name")).toString(), projectPath});
+                    projects.append(VSCodeProject{position, obj.value(QStringLiteral("name")).toString(), projectPath, obj.value(QStringLiteral("tags")).toArray()});
                 }
             }
         }
@@ -113,7 +130,7 @@ QList<VSCodeProject> VSCodeProjectsRunner::loadProjects(const QString &dirName) 
                 const auto obj = item.toObject();
                 const QString projectPath = obj.value(QStringLiteral("fullPath")).toString();
                 projects.append(
-                    VSCodeProject{position + prevCount, obj.value(QStringLiteral("name")).toString(), projectPath});
+                    VSCodeProject{position + prevCount, obj.value(QStringLiteral("name")).toString(), projectPath, obj.value(QStringLiteral("tags")).toArray()});
             }
         }
     }
@@ -132,7 +149,7 @@ QList<VSCodeProject> VSCodeProjectsRunner::loadProjects(const QString &dirName) 
             }
             const QString localFile = QUrl(fileOrFolderUri).toLocalFile();
             if (!localFile.isEmpty()) {
-                projects.append(VSCodeProject{1, QFileInfo(localFile).fileName(), localFile});
+                projects.append(VSCodeProject{1, QFileInfo(localFile).fileName(), localFile, obj.value(QStringLiteral("tags")).toArray()});
             }
         }
     }

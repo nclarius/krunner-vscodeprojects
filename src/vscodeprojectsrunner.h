@@ -9,6 +9,7 @@ struct VSCodeProject {
     int position;
     QString name;
     QString path;
+    QStringList tags;
 };
 
 class VSCodeProjectsRunner : public Plasma::AbstractRunner {
@@ -19,7 +20,7 @@ public:
 
     const QRegularExpression nameQueryRegex = QRegularExpression(QStringLiteral("^(vs)?code( (?<query>.+))?$"));
     QList<VSCodeProject> projects;
-    bool projectNameMatches, appNameMatches;
+    bool projectNameMatches, appNameMatches, tagMatches;
 
     Plasma::QueryMatch createMatch(const QString &text, const QString &data, double relevance);
 
