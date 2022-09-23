@@ -90,7 +90,7 @@ void VSCodeProjectsRunner::run(const KRunner::RunnerContext &, const KRunner::Qu
     if (!QStandardPaths::findExecutable(QStringLiteral("codium")).isEmpty()) {
         executable = QStringLiteral("codium");
     }
-    QProcess::startDetached(executable, {match.data().toString()});
+    QProcess::startDetached(QStringLiteral("kstart5"), {QStringLiteral("--maximize"), executable, match.data().toString()});
 }
 
 QList<VSCodeProject> VSCodeProjectsRunner::loadProjects(const QString &dirName)
