@@ -68,11 +68,7 @@ Plasma::QueryMatch VSCodeProjectsRunner::createMatch(const QString &text, const 
 void VSCodeProjectsRunner::run(const Plasma::RunnerContext &context, const Plasma::QueryMatch &match) {
     Q_UNUSED(context)
 
-    QString executable = QStringLiteral("code");
-    if (!QStandardPaths::findExecutable(QStringLiteral("codium")).isEmpty()) {
-        executable = QStringLiteral("codium");
-    }
-    QProcess::startDetached(executable, {match.data().toString()});
+    QProcess::startDetached(QStringLiteral("kstart5"), {QStringLiteral("--maximize"), QStringLiteral("code"), match.data().toString()});
 }
 
 QList<VSCodeProject> VSCodeProjectsRunner::loadProjects(const QString &dirName) {
