@@ -29,7 +29,7 @@ void VSCodeProjectsRunner::match(Plasma::RunnerContext &context) {
 
     if (projectNameMatches && (term.size() > 2 || context.singleRunnerQueryMode())) {
         for (const auto &project : qAsConst(projects)) {
-            if (project.name.startsWith(term, Qt::CaseInsensitive)) {
+            if (project.name.contains(term, Qt::CaseInsensitive)) {
                 if (QFileInfo::exists(project.path)) {
                     context.addMatch(createMatch("Open " + project.name, project.path, (double) term.length() / project.name.length()));
                 }
