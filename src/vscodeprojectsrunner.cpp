@@ -43,8 +43,15 @@ void VSCodeProjectsRunner::match(KRunner::RunnerContext &context)
 
     if (projectNameMatches && (term.size() > 2 || context.singleRunnerQueryMode())) {
         for (const auto &project : qAsConst(projects)) {
+<<<<<<< HEAD
             if (project.name.startsWith(term, Qt::CaseInsensitive) && QFileInfo::exists(project.path)) {
                 context.addMatch(createMatch("Open " + project.name, project.path, (double)term.length() / project.name.length()));
+=======
+            if (project.name.contains(term, Qt::CaseInsensitive)) {
+                if (QFileInfo::exists(project.path)) {
+                    context.addMatch(createMatch("Open " + project.name, project.path, (double) term.length() / project.name.length()));
+                }
+>>>>>>> dc43610 (match substring)
             }
         }
     }
