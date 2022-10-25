@@ -6,7 +6,7 @@
                 "Name": "Alex1701c"
             }
         ],
-        "Description": "VSCodeProjectsRunner runner",
+        "Description": "Open VSCode projects",
         "EnabledByDefault": true,
         "Icon": "code_runner",
         "Id": "vscodeprojectsrunner",

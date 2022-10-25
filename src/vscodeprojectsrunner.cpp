@@ -31,7 +31,7 @@ void VSCodeProjectsRunner::match(Plasma::RunnerContext &context) {
         for (const auto &project : qAsConst(projects)) {
             if (project.name.startsWith(term, Qt::CaseInsensitive)) {
                 if (QFileInfo::exists(project.path)) {
-                    context.addMatch(createMatch("Open " + project.name, project.path, (double) term.length() / project.name.length()));
+                    context.addMatch(createMatch(project.name, project.path, (double) term.length() / project.name.length()));
                 }
             }
         }
@@ -44,7 +44,7 @@ void VSCodeProjectsRunner::match(Plasma::RunnerContext &context) {
             if (project.name.startsWith(projectQuery, Qt::CaseInsensitive)) {
                 if (QFileInfo::exists(project.path)) {
                     context.addMatch(
-                            createMatch("Open " + project.name, project.path, (double) project.position / 20)
+                            createMatch(project.name, project.path, (double) project.position / 20)
                     );
                 }
             }
@@ -93,9 +93,10 @@ QList<VSCodeProject> VSCodeProjectsRunner::loadProjects(const QString &dirName) 
                 const auto obj = item.toObject();
                 if (obj.value(QStringLiteral("enabled")).toBool()) {
                     --position;
+                    const QString projectName = obj.value(QStringLiteral("name")).toString();
                     const QString projectPath = obj.value(QStringLiteral("rootPath")).toString()
                                                     .replace(QLatin1String("$home"), QDir::homePath());
-                    projects.append(VSCodeProject{position, obj.value(QStringLiteral("name")).toString(), projectPath});
+                    projects.append(VSCodeProject{position, projectName, projectPath});
                 }
             }
         }
@@ -111,9 +112,10 @@ QList<VSCodeProject> VSCodeProjectsRunner::loadProjects(const QString &dirName) 
             const auto array = d.array();
             for (const auto &item : array) {
                 const auto obj = item.toObject();
+                const QString projectName = obj.value(QStringLiteral("fullPath")).toString();
                 const QString projectPath = obj.value(QStringLiteral("fullPath")).toString();
                 projects.append(
-                    VSCodeProject{position + prevCount, obj.value(QStringLiteral("name")).toString(), projectPath});
+                    VSCodeProject{position + prevCount, projectName, projectPath});
             }
         }
     }
