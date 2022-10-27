@@ -19,7 +19,7 @@ public:
 
     const QRegularExpression nameQueryRegex = QRegularExpression(QStringLiteral("^(vs)?code( (?<query>.+))?$"));
     QList<VSCodeProject> projects;
-    bool projectNameMatches, appNameMatches;
+    bool projectNameMatches, appNameMatches, kdesrcNameMatches;
 
     Plasma::QueryMatch createMatch(const QString &text, const QString &data, double relevance);
 

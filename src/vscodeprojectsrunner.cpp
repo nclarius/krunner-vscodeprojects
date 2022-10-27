@@ -21,6 +21,7 @@ void VSCodeProjectsRunner::reloadConfiguration() {
 
     appNameMatches = config().readEntry("appNameMatches", true);
     projectNameMatches = config().readEntry("projectNameMatches", true);
+    kdesrcNameMatches = config().readEntry("kdesrcNameMatches", true);
 }
 
 void VSCodeProjectsRunner::match(Plasma::RunnerContext &context) {
@@ -38,17 +39,31 @@ void VSCodeProjectsRunner::match(Plasma::RunnerContext &context) {
     }
     if (appNameMatches) {
         const auto match = nameQueryRegex.match(term);
-        if (!match.hasMatch()) return;
-        const QString projectQuery = match.captured(QStringLiteral("query"));
-        for (const auto &project: qAsConst(projects)) {
-            if (project.name.startsWith(projectQuery, Qt::CaseInsensitive)) {
-                if (QFileInfo::exists(project.path)) {
-                    context.addMatch(
-                            createMatch("Open " + project.name, project.path, (double) project.position / 20)
-                    );
+        if (match.hasMatch()) {
+            const QString projectQuery = match.captured(QStringLiteral("query"));
+            for (const auto &project: qAsConst(projects)) {
+                if (project.name.startsWith(projectQuery, Qt::CaseInsensitive)) {
+                    if (QFileInfo::exists(project.path)) {
+                        context.addMatch(
+                                createMatch(project.name, project.path, (double) project.position / 20)
+                        );
+                    }
                 }
             }
         }
+    }
+    if (kdesrcNameMatches) {
+        const QString kdesrcRoot = QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/kde/src/";
+        QDir dir(kdesrcRoot);
+        QList <QFileInfo> fileList= dir.entryInfoList();
+        for (int i=0; i< fileList.size(); i++)
+        {
+            auto file = fileList.at(i);
+            if (QFileInfo(file).isDir() && file.fileName().contains(term, Qt::CaseInsensitive)) {
+                context.addMatch(createMatch(file.fileName(), file.absoluteFilePath(), (double) term.length() / file.fileName().length()));
+            }
+        }
+        
     }
 }
 
