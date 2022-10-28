@@ -46,7 +46,7 @@ void VSCodeProjectsRunner::match(KRunner::RunnerContext &context)
         for (const auto &project : qAsConst(projects)) {
             if (project.name.contains(term, Qt::CaseInsensitive) && QFileInfo::exists(project.path)) {
                 if (QFileInfo::exists(project.path)) {
-                    context.addMatch(createMatch("Open " + project.name, project.path, (double) term.length() / project.name.length()));
+                    context.addMatch(createMatch(project.name, project.path, (double) term.length() / project.name.length()));
                 }
             }
         }
@@ -59,7 +59,9 @@ void VSCodeProjectsRunner::match(KRunner::RunnerContext &context)
         for (const auto &project : qAsConst(projects)) {
             if (project.name.startsWith(projectQuery, Qt::CaseInsensitive)) {
                 if (QFileInfo::exists(project.path)) {
-                    context.addMatch(createMatch("Open " + project.name, project.path, (double)project.position / 20));
+                    context.addMatch(
+                            createMatch(project.name, project.path, (double) project.position / 20)
+                    );
                 }
             }
         }
