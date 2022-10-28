@@ -4,6 +4,7 @@
 #include <KLocalizedString>
 #include <QtCore>
 #include <KSharedConfig>
+#include <KShell>
 
 VSCodeProjectsRunner::VSCodeProjectsRunner(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
         : Plasma::AbstractRunner(parent, data, args) {
@@ -54,11 +55,18 @@ void VSCodeProjectsRunner::match(Plasma::RunnerContext &context) {
 
 Plasma::QueryMatch VSCodeProjectsRunner::createMatch(const QString &text, const QString &data, double relevance) {
     auto match = Plasma::QueryMatch(this);
+
     QUrl idUrl;
     idUrl.setScheme(id());
     idUrl.setPath(data);
+    QUrl pathUrl;
+    pathUrl.setScheme("file");
+    pathUrl.setPath(data);
+    QString pathName = KShell::tildeCollapse(pathUrl.adjusted(QUrl::RemoveFilename | QUrl::StripTrailingSlash).toLocalFile());
+
     match.setId(idUrl.toString());
     match.setText(text);
+    match.setSubtext(pathName);
     match.setData(data);
     match.setRelevance(relevance);
     match.setIcon(icon());
