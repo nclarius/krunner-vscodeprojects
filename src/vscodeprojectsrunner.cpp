@@ -32,7 +32,7 @@ void VSCodeProjectsRunner::match(Plasma::RunnerContext &context) {
         for (const auto &project : qAsConst(projects)) {
             if (project.name.startsWith(term, Qt::CaseInsensitive)) {
                 if (QFileInfo::exists(project.path)) {
-                    context.addMatch(createMatch("Open " + project.name, project.path, (double) term.length() / project.name.length()));
+                    context.addMatch(createMatch(project.name, project.path, (double) term.length() / project.name.length()));
                 }
             }
         }
@@ -45,7 +45,7 @@ void VSCodeProjectsRunner::match(Plasma::RunnerContext &context) {
             if (project.name.startsWith(projectQuery, Qt::CaseInsensitive)) {
                 if (QFileInfo::exists(project.path)) {
                     context.addMatch(
-                            createMatch("Open " + project.name, project.path, (double) project.position / 20)
+                            createMatch(project.name, project.path, (double) project.position / 20)
                     );
                 }
             }
