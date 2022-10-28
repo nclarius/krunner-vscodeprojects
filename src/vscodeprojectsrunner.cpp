@@ -13,6 +13,7 @@
 #include <QJsonObject>
 #include <QProcess>
 #include <QString>
+#include <KShell>
 
 VSCodeProjectsRunner::VSCodeProjectsRunner(QObject *parent, const KPluginMetaData &data, const QVariantList &args)
 #if KRUNNER_VERSION_MAJOR == 5
@@ -43,15 +44,10 @@ void VSCodeProjectsRunner::match(KRunner::RunnerContext &context)
 
     if (projectNameMatches && (term.size() > 2 || context.singleRunnerQueryMode())) {
         for (const auto &project : qAsConst(projects)) {
-<<<<<<< HEAD
-            if (project.name.startsWith(term, Qt::CaseInsensitive) && QFileInfo::exists(project.path)) {
-                context.addMatch(createMatch("Open " + project.name, project.path, (double)term.length() / project.name.length()));
-=======
-            if (project.name.contains(term, Qt::CaseInsensitive)) {
+            if (project.name.contains(term, Qt::CaseInsensitive) && QFileInfo::exists(project.path)) {
                 if (QFileInfo::exists(project.path)) {
                     context.addMatch(createMatch("Open " + project.name, project.path, (double) term.length() / project.name.length()));
                 }
->>>>>>> dc43610 (match substring)
             }
         }
     }
@@ -76,8 +72,14 @@ KRunner::QueryMatch VSCodeProjectsRunner::createMatch(const QString &text, const
     QUrl idUrl;
     idUrl.setScheme(id());
     idUrl.setPath(data);
+    QUrl pathUrl;
+    pathUrl.setScheme("file");
+    pathUrl.setPath(data);
+    QString pathName = KShell::tildeCollapse(pathUrl.adjusted(QUrl::RemoveFilename | QUrl::StripTrailingSlash).toLocalFile());
+
     match.setId(idUrl.toString());
     match.setText(text);
+    match.setSubtext(pathName);
     match.setData(data);
     match.setRelevance(relevance);
     match.setIconName(metadata().iconName());
