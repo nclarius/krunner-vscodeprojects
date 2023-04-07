@@ -10,7 +10,7 @@
         "EnabledByDefault": true,
         "Icon": "code_runner",
         "License": "LGPL 3",
-        "Name": "VSCodeRunner",
+        "Name": "VSCode Projets",
         "Version": "1.0.1"
     },
     "X-Plasma-Runner-Unique-Results": true
