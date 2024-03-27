@@ -4,13 +4,13 @@ set(CMAKE_PROJECT_VERSION  "1.2.0")
 set(CMAKE_PROJECT_HOMEPAGE_URL "https://github.com/alex1701c/krunner-vscodeprojects")
 set(CMAKE_PROJECT_AUTHOR "alex1701c")
 set(CMAKE_PROJECT_AUTHOR_EMAIL "alex1701c.dev@gmx.net")
-set(KF5_MIN_VERSION 5.73.0)
-find_package(ECM ${KF5_MIN_VERSION} REQUIRED NO_MODULE)
+set(KF6_MIN_VERSION 6.0.0)
+find_package(ECM ${KF6_MIN_VERSION} REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR} ${CMAKE_MODULE_PATH})
 
 # Find the required Libaries
-find_package(Qt5 ${QT_MIN_VERSION} REQUIRED CONFIG COMPONENTS Widgets Core Quick QuickWidgets)
-find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS I18n Service Runner TextWidgets ConfigWidgets PlasmaQuick)
+find_package(Qt6 ${QT_MIN_VERSION} REQUIRED CONFIG COMPONENTS Widgets Core Quick QuickWidgets)
+find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS I18n Service Runner TextWidgets ConfigWidgets PlasmaQuick)
 include(KDEInstallDirs)
 include(KDECMakeSettings)
 include(KDECompilerSettings NO_POLICY_SCOPE)
@@ -31,17 +31,17 @@ set(CPACK_RPM_PACKAGE_ARCHITECTURE "x86_64")
 set(CPACK_RPM_PACKAGE_LICENSE "LGPL 3")
 
 # Then names of dependencies and paths might differ
-if (CPACK_DEBIAN) # -DCPACK_DEBIAN=true -DKDE_INSTALL_QTPLUGINDIR=/usr/lib/x86_64-linux-gnu/qt5/plugins
-	set(CPACK_DEBIAN_PACKAGE_DEPENDS "libkf5runner5 (>=${KF5Runner_VERSION})")
+if (CPACK_DEBIAN) # -DCPACK_DEBIAN=true -DKDE_INSTALL_QTPLUGINDIR=/usr/lib/x86_64-linux-gnu/qt6/plugins
+	set(CPACK_DEBIAN_PACKAGE_DEPENDS "libkf6runner5 (>=${KF6Runner_VERSION})")
 	set(CPACK_DEBIAN_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-Debian.deb")
 	set(CPACK_GENERATOR "DEB")
-elseif(CPACK_FEDORA) # -DCPACK_FEDORA=true -DKDE_INSTALL_QTPLUGINDIR=/usr/lib64/qt5/plugins
-	set(CPACK_RPM_PACKAGE_REQUIRES "kf5-krunner >= ${KF5Runner_VERSION}")
+elseif(CPACK_FEDORA) # -DCPACK_FEDORA=true -DKDE_INSTALL_QTPLUGINDIR=/usr/lib64/qt6/plugins
+	set(CPACK_RPM_PACKAGE_REQUIRES "kf6-krunner >= ${KF6Runner_VERSION}")
 	set(CPACK_RPM_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-Fedora.rpm")
-	set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION "/usr/lib64/qt5;/usr/lib64/qt5/plugins;/usr/lib64/qt5/plugins/kf5;/usr/lib64/qt5/plugins/kf5/krunner;/usr/share/kservices5;/usr/share/icons")
+	set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION "/usr/lib64/qt6;/usr/lib64/qt6/plugins;/usr/lib64/qt6/plugins/kf6;/usr/lib64/qt6/plugins/kf6/krunner;/usr/share/kservices5;/usr/share/icons")
 	set(CPACK_GENERATOR "RPM")
-elseif(CPACK_OPENSUSE) # -DCPACK_OPENSUSE=true -DKDE_INSTALL_QTPLUGINDIR=/usr/lib64/qt5/plugins
-	set(CPACK_RPM_PACKAGE_REQUIRES "libKF5Runner5 >= ${KF5Runner_VERSION}")
+elseif(CPACK_OPENSUSE) # -DCPACK_OPENSUSE=true -DKDE_INSTALL_QTPLUGINDIR=/usr/lib64/qt6/plugins
+	set(CPACK_RPM_PACKAGE_REQUIRES "libKF6Runner5 >= ${KF6Runner_VERSION}")
 	set(CPACK_RPM_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-OpenSUSE.rpm")
 	set(CPACK_GENERATOR "RPM")
 endif()
